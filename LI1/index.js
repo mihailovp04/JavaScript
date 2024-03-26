@@ -42,14 +42,15 @@ class TransactionAnalyzer {
   }
 
   getUniqueTransactionTypes() {
-      const uniqueTypes = [];
-      for (let transaction of this.transactions) {
-          if (!uniqueTypes.includes(transaction.type)) {
-              uniqueTypes.push(transaction.type);
-          }
-      }
-      return uniqueTypes;
+    const uniqueTypes = new Set();
+  
+    for (let transaction of this.transactions) {
+      uniqueTypes.add(transaction.type);
+    }
+  
+    return Array.from(uniqueTypes);
   }
+  
 
   calculateTotalAmount() {
       let total = 0;
@@ -196,6 +197,23 @@ mostTransactionTypes() {
   if (debitCount === creditCount) return 'equal';
   return debitCount > creditCount ? 'debit' : 'credit';
 }
+calculateTotalAmountByDate(year, month, day) {
+    let total = 0; 
+  
+    for (let transaction of this.transactions) {
+      const transactionDate = new Date(transaction.date); 
+      
+      const matchYear = year === undefined || transactionDate.getFullYear() === year;
+            const matchMonth = month === undefined || transactionDate.getMonth() === (month - 1);
+      
+      const matchDay = day === undefined || transactionDate.getDate() === day;
+        if (matchYear && matchMonth && matchDay) {
+        total += transaction.amount;
+      }
+    }
+    return total;
+  }
+  
 }
 const fs = require('fs');
 
@@ -218,3 +236,5 @@ console.log('Количество транзакций до "2019-02-01":', anal
 console.log('Месяц с наибольшим количеством транзакций:', analyzer.findMostTransactionsMonth());
 console.log('Месяц с наибольшим количеством дебетовых транзакций:', analyzer.findMostDebitTransactionMonth());
 console.log('Преобладающий тип транзакций:', analyzer.mostTransactionTypes());
+console.log('Общая сумма транзакций за 1 января 2019 года:', analyzer.calculateTotalAmountByDate(2019, 1, 1));
+
