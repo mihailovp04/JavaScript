@@ -21,7 +21,6 @@ class Transaction {
       this.merchant = merchant;
       this.cardType = cardType;
     }
-  
     /**
      * Возвращает строковое представление транзакции в формате JSON.
      * @return {string} Строковое представление транзакции.
